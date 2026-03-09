@@ -1,0 +1,76 @@
+@page
+@model UselessLabb.Pages.Genres.IndexModel
+@{
+    ViewData["Title"] = "Жанри";
+}
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-tags"></i> Список жанрів</h1>
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <a asp-page="Create" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Додати новий жанр
+            </a>
+        }
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Назва жанру</th>
+                    <th>Опис</th>
+                    <th>Кількість книг</th>
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <th>Дії</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Genres)
+                {
+                    <tr>
+                        <td><strong>@item.Name</strong></td>
+                        <td>@(item.Description ?? "-")</td>
+                        <td><span class="badge bg-info">@(item.Books?.Count ?? 0)</span></td>
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <td>
+                                <a asp-page="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal@(item.Id)">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        }
+                    </tr>
+
+                    <!-- Delete Modal -->
+                    <div class="modal fade" id="deleteModal@(item.Id)" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Підтвердження видалення</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Ви впевнені, що хочете видалити жанр "<strong>@item.Name</strong>"?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Скасувати</button>
+                                    <form asp-page="Delete" method="post" style="display:inline;">
+                                        <input type="hidden" name="id" value="@item.Id" />
+                                        <button type="submit" class="btn btn-danger">Видалити</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

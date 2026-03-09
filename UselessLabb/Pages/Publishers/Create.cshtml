@@ -1,0 +1,71 @@
+@page
+@model UselessLabb.Pages.Publishers.CreateModel
+@{
+    ViewData["Title"] = "Додати видавництво";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h1><i class="bi bi-plus-circle"></i> Додати нове видавництво</h1>
+            <hr />
+
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Publisher.Name" class="form-label"></label>
+                    <input asp-for="Publisher.Name" class="form-control" placeholder="Введіть назву видавництва" />
+                    <span asp-validation-for="Publisher.Name" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Publisher.Address" class="form-label"></label>
+                    <input asp-for="Publisher.Address" class="form-control" placeholder="Введіть адресу" />
+                    <span asp-validation-for="Publisher.Address" class="text-danger"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Publisher.Phone" class="form-label"></label>
+                        <input asp-for="Publisher.Phone" class="form-control" placeholder="+380123456789" />
+                        <span asp-validation-for="Publisher.Phone" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Publisher.Email" class="form-label"></label>
+                        <input asp-for="Publisher.Email" class="form-control" placeholder="email@example.com" />
+                        <span asp-validation-for="Publisher.Email" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Publisher.Website" class="form-label"></label>
+                        <input asp-for="Publisher.Website" class="form-control" placeholder="https://example.com" />
+                        <span asp-validation-for="Publisher.Website" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Publisher.FoundedDate" class="form-label"></label>
+                        <input asp-for="Publisher.FoundedDate" type="date" class="form-control" />
+                        <span asp-validation-for="Publisher.FoundedDate" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save"></i> Зберегти
+                    </button>
+                    <a asp-page="Index" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Назад до списку
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

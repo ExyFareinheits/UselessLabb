@@ -1,0 +1,69 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Головна сторінка";
+}
+
+<div class="text-center mb-5">
+    <h1 class="display-4"><i class="bi bi-book-half"></i> Ласкаво просимо до Бібліотеки книг</h1>
+    <p class="lead">Система управління книгами, жанрами та видавництвами</p>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-center shadow-sm h-100">
+            <div class="card-body">
+                <i class="bi bi-book-fill text-primary" style="font-size: 3rem;"></i>
+                <h5 class="card-title mt-3">Книги</h5>
+                <p class="card-text">Перегляд та управління колекцією книг</p>
+                <a asp-page="/Books/Index" class="btn btn-primary">Переглянути книги</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center shadow-sm h-100">
+            <div class="card-body">
+                <i class="bi bi-tags-fill text-success" style="font-size: 3rem;"></i>
+                <h5 class="card-title mt-3">Жанри</h5>
+                <p class="card-text">Організація книг за жанрами</p>
+                <a asp-page="/Genres/Index" class="btn btn-success">Переглянути жанри</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center shadow-sm h-100">
+            <div class="card-body">
+                <i class="bi bi-building text-warning" style="font-size: 3rem;"></i>
+                <h5 class="card-title mt-3">Видавництва</h5>
+                <p class="card-text">Каталог видавництв книг</p>
+                <a asp-page="/Publishers/Index" class="btn btn-warning">Переглянути видавництва</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h3><i class="bi bi-info-circle"></i> Про систему</h3>
+                <p>Ця система дозволяє керувати колекцією книг з можливістю:</p>
+                <ul>
+                    <li>Додавання, редагування та видалення книг</li>
+                    <li>Організація книг за жанрами</li>
+                    <li>Управління інформацією про видавництва</li>
+                    <li>Завантаження обкладинок книг</li>
+                    <li>Пошук та фільтрація даних</li>
+                </ul>
+                @if (User.Identity?.IsAuthenticated != true)
+                {
+                    <div class="alert alert-info mt-3">
+                        <i class="bi bi-exclamation-circle"></i> <strong>Увага!</strong> 
+                        Для редагування даних необхідно <a asp-area="Identity" asp-page="/Account/Login" class="alert-link">увійти в систему</a> 
+                        або <a asp-area="Identity" asp-page="/Account/Register" class="alert-link">зареєструватися</a>.
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

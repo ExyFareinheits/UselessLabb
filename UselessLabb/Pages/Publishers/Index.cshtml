@@ -1,0 +1,86 @@
+@page
+@model UselessLabb.Pages.Publishers.IndexModel
+@{
+    ViewData["Title"] = "Видавництва";
+}
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-building"></i> Список видавництв</h1>
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <a asp-page="Create" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Додати нове видавництво
+            </a>
+        }
+    </div>
+
+    <div class="row">
+        @foreach (var item in Model.Publishers)
+        {
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="bi bi-building"></i> @item.Name</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (!string.IsNullOrEmpty(item.Address))
+                        {
+                            <p><i class="bi bi-geo-alt"></i> <strong>Адреса:</strong> @item.Address</p>
+                        }
+                        @if (!string.IsNullOrEmpty(item.Phone))
+                        {
+                            <p><i class="bi bi-telephone"></i> <strong>Телефон:</strong> @item.Phone</p>
+                        }
+                        @if (!string.IsNullOrEmpty(item.Email))
+                        {
+                            <p><i class="bi bi-envelope"></i> <strong>Email:</strong> <a href="mailto:@item.Email">@item.Email</a></p>
+                        }
+                        @if (!string.IsNullOrEmpty(item.Website))
+                        {
+                            <p><i class="bi bi-globe"></i> <strong>Веб-сайт:</strong> <a href="@item.Website" target="_blank">@item.Website</a></p>
+                        }
+                        @if (item.FoundedDate.HasValue)
+                        {
+                            <p><i class="bi bi-calendar-event"></i> <strong>Заснована:</strong> @item.FoundedDate.Value.ToString("dd.MM.yyyy")</p>
+                        }
+                        <p><i class="bi bi-book"></i> <strong>Кількість книг:</strong> <span class="badge bg-info">@(item.Books?.Count ?? 0)</span></p>
+                    </div>
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <div class="card-footer bg-transparent">
+                            <a asp-page="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">
+                                <i class="bi bi-pencil"></i> Редагувати
+                            </a>
+                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal@(item.Id)">
+                                <i class="bi bi-trash"></i> Видалити
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Delete Modal -->
+            <div class="modal fade" id="deleteModal@(item.Id)" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Підтвердження видалення</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            Ви впевнені, що хочете видалити видавництво "<strong>@item.Name</strong>"?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Скасувати</button>
+                            <form asp-page="Delete" method="post" style="display:inline;">
+                                <input type="hidden" name="id" value="@item.Id" />
+                                <button type="submit" class="btn btn-danger">Видалити</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

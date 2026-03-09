@@ -1,0 +1,66 @@
+## .NET / ASP.NET Core
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+## Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]uild/
+[Rr]eleases/
+[Xx]64/
+[Xx]86/
+[Ww][Ii][Nn]32/
+[Aa][Nn][Yy] [Cc][Pp][Uu]/
+out/
+msbuild.log
+msbuild.err
+msbuild.wrn
+
+## NuGet packages
+*.nupkg
+*.snupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+*.nuget.props
+*.nuget.targets
+
+## User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+## dotnet tools
+.config/dotnet-tools.json
+
+## ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+## Published output
+**/publish/
+**/PublishProfiles/
+
+## Uploaded files (user content)
+**/wwwroot/uploads/
+
+## Environment / secrets
+**/appsettings.Development.json
+*.env
+
+## OS
+.DS_Store
+Thumbs.db

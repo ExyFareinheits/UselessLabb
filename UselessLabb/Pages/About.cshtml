@@ -1,0 +1,66 @@
+@page
+@model UselessLabb.Pages.AboutModel
+@{
+    ViewData["Title"] = "Про Автора";
+}
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <i class="bi bi-person-circle" style="font-size: 100px; color: #0d6efd;"></i>
+                    <h1 class="card-title mt-3">Про Автора</h1>
+                </div>
+                
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <h3><i class="bi bi-info-circle"></i> Інформація про проект</h3>
+                        <hr />
+                        <p><strong>Назва проекту:</strong> Система управління бібліотекою книг</p>
+                        <p><strong>Версія:</strong> 1.0</p>
+                        <p><strong>Технології:</strong></p>
+                        <ul>
+                            <li>ASP.NET Core 10.0 (Razor Pages)</li>
+                            <li>Entity Framework Core</li>
+                            <li>Microsoft SQL Server</li>
+                            <li>ASP.NET Core Identity</li>
+                            <li>Bootstrap 5</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <h3><i class="bi bi-card-checklist"></i> Функціональність</h3>
+                        <hr />
+                        <ul>
+                            <li><i class="bi bi-check-circle-fill text-success"></i> CRUD операції для книг, жанрів та видавництв</li>
+                            <li><i class="bi bi-check-circle-fill text-success"></i> Авторизація та автентифікація користувачів</li>
+                            <li><i class="bi bi-check-circle-fill text-success"></i> Валідація форм на клієнті та сервері</li>
+                            <li><i class="bi bi-check-circle-fill text-success"></i> UI компоненти (datepicker, select list, modal)</li>
+                            <li><i class="bi bi-check-circle-fill text-success"></i> Завантаження зображень</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3><i class="bi bi-person-badge"></i> Контактна інформація</h3>
+                        <hr />
+                        <p><strong>Автор:</strong> Студент</p>
+                        <p><strong>Email:</strong> student@example.com</p>
+                        <p><strong>GitHub:</strong> <a href="https://github.com" target="_blank">github.com/student</a></p>
+                        <p><strong>Рік створення:</strong> 2026</p>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <a asp-page="/Index" class="btn btn-primary">
+                        <i class="bi bi-house"></i> Повернутися на головну
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

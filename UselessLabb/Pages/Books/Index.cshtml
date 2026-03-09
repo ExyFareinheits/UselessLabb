@@ -1,0 +1,99 @@
+@page
+@model UselessLabb.Pages.Books.IndexModel
+@{
+    ViewData["Title"] = "Книги";
+}
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-book"></i> Список книг</h1>
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <a asp-page="Create" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Додати нову книгу
+            </a>
+        }
+    </div>
+
+    @if (!Model.Books.Any())
+    {
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> Немає доступних книг. Додайте першу книгу!
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var item in Model.Books)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        @if (!string.IsNullOrEmpty(item.CoverImage))
+                        {
+                            <img src="@item.CoverImage" class="card-img-top" alt="@item.Title" style="height: 300px; object-fit: cover;">
+                        }
+                        else
+                        {
+                            <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 300px;">
+                                <i class="bi bi-book" style="font-size: 100px; color: white;"></i>
+                            </div>
+                        }
+                        <div class="card-body">
+                            <h5 class="card-title">@item.Title</h5>
+                            <p class="card-text">
+                                <strong><i class="bi bi-person"></i> Автор:</strong> @item.Author<br />
+                                <strong><i class="bi bi-tag"></i> Жанр:</strong> @(item.Genre?.Name ?? "Не вказано")<br />
+                                <strong><i class="bi bi-building"></i> Видавництво:</strong> @(item.Publisher?.Name ?? "Не вказано")<br />
+                                <strong><i class="bi bi-currency-dollar"></i> Ціна:</strong> @item.Price.ToString("C")<br />
+                                @if (item.PublishDate.HasValue)
+                                {
+                                    <strong><i class="bi bi-calendar"></i> Дата:</strong> @item.PublishDate.Value.ToString("dd.MM.yyyy")
+                                }
+                            </p>
+                            @if (!string.IsNullOrEmpty(item.Description))
+                            {
+                                <p class="card-text"><small class="text-muted">@item.Description</small></p>
+                            }
+                        </div>
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <div class="card-footer bg-transparent">
+                                <a asp-page="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">
+                                    <i class="bi bi-pencil"></i> Редагувати
+                                </a>
+                                <a asp-page="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">
+                                    <i class="bi bi-eye"></i> Деталі
+                                </a>
+                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal@(item.Id)">
+                                    <i class="bi bi-trash"></i> Видалити
+                                </button>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Delete Modal -->
+                <div class="modal fade" id="deleteModal@(item.Id)" tabindex="-1" aria-labelledby="deleteModalLabel@(item.Id)" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteModalLabel@(item.Id)">Підтвердження видалення</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Ви впевнені, що хочете видалити книгу "<strong>@item.Title</strong>"?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Скасувати</button>
+                                <form asp-page="Delete" method="post" style="display:inline;">
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <button type="submit" class="btn btn-danger">Видалити</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

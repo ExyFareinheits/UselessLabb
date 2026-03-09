@@ -1,0 +1,104 @@
+@page
+@model UselessLabb.Pages.Books.DetailsModel
+@{
+    ViewData["Title"] = "Деталі книги";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h1><i class="bi bi-eye"></i> Деталі книги</h1>
+            <hr />
+
+            <div class="card shadow">
+                <div class="row g-0">
+                    @if (!string.IsNullOrEmpty(Model.Book.CoverImage))
+                    {
+                        <div class="col-md-4">
+                            <img src="@Model.Book.CoverImage" class="img-fluid rounded-start" alt="@Model.Book.Title">
+                        </div>
+                    }
+                    <div class="@(string.IsNullOrEmpty(Model.Book.CoverImage) ? "col-md-12" : "col-md-8")">
+                        <div class="card-body">
+                            <h2 class="card-title">@Model.Book.Title</h2>
+                            
+                            <dl class="row mt-4">
+                                <dt class="col-sm-4"><i class="bi bi-person"></i> Автор:</dt>
+                                <dd class="col-sm-8">@Model.Book.Author</dd>
+
+                                <dt class="col-sm-4"><i class="bi bi-upc"></i> ISBN:</dt>
+                                <dd class="col-sm-8">@Model.Book.ISBN</dd>
+
+                                @if (Model.Book.Genre != null)
+                                {
+                                    <dt class="col-sm-4"><i class="bi bi-tag"></i> Жанр:</dt>
+                                    <dd class="col-sm-8">@Model.Book.Genre.Name</dd>
+                                }
+
+                                @if (Model.Book.Publisher != null)
+                                {
+                                    <dt class="col-sm-4"><i class="bi bi-building"></i> Видавництво:</dt>
+                                    <dd class="col-sm-8">@Model.Book.Publisher.Name</dd>
+                                }
+
+                                @if (Model.Book.PublishDate.HasValue)
+                                {
+                                    <dt class="col-sm-4"><i class="bi bi-calendar"></i> Дата публікації:</dt>
+                                    <dd class="col-sm-8">@Model.Book.PublishDate.Value.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("uk-UA"))</dd>
+                                }
+
+                                <dt class="col-sm-4"><i class="bi bi-currency-dollar"></i> Ціна:</dt>
+                                <dd class="col-sm-8"><strong class="text-success">@Model.Book.Price.ToString("C")</strong></dd>
+
+                                @if (!string.IsNullOrEmpty(Model.Book.Description))
+                                {
+                                    <dt class="col-sm-4"><i class="bi bi-file-text"></i> Опис:</dt>
+                                    <dd class="col-sm-8">@Model.Book.Description</dd>
+                                }
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <div>
+                        <a asp-page="Edit" asp-route-id="@Model.Book.Id" class="btn btn-warning">
+                            <i class="bi bi-pencil"></i> Редагувати
+                        </a>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                            <i class="bi bi-trash"></i> Видалити
+                        </button>
+                    </div>
+                }
+                <a asp-page="Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Назад до списку
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Підтвердження видалення</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Ви впевнені, що хочете видалити книгу "<strong>@Model.Book.Title</strong>"?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Скасувати</button>
+                <form asp-page="Delete" method="post" style="display:inline;">
+                    <input type="hidden" name="id" value="@Model.Book.Id" />
+                    <button type="submit" class="btn btn-danger">Видалити</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
