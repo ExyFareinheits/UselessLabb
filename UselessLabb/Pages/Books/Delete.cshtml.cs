@@ -35,7 +35,7 @@ namespace UselessLabb.Pages.Books
                 // Delete cover image if exists
                 if (!string.IsNullOrEmpty(book.CoverImage))
                 {
-                    var filePath = Path.Combine(_webHostEnvironment.WebRootPath, book.CoverImage.TrimStart('/'));
+                    var filePath = ResolveUploadPath(book.CoverImage);
                     if (System.IO.File.Exists(filePath))
                     {
                         System.IO.File.Delete(filePath);
@@ -47,6 +47,21 @@ namespace UselessLabb.Pages.Books
             }
 
             return RedirectToPage("./Index");
+        }
+
+        private static string ResolveUploadPath(string publicPath)
+        {
+            var uploadsRoot = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "UselessLabb",
+                "uploads");
+
+            var relativePath = publicPath
+                .TrimStart('/')
+                .Replace("uploads/", string.Empty, StringComparison.OrdinalIgnoreCase)
+                .Replace('/', Path.DirectorySeparatorChar);
+
+            return Path.Combine(uploadsRoot, relativePath);
         }
     }
 }

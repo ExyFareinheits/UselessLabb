@@ -69,8 +69,7 @@ namespace UselessLabb.Pages.Books
 
                     if (!string.IsNullOrEmpty(oldCover))
                     {
-                        var webRoot = _webHostEnvironment.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
-                        var oldFilePath = Path.Combine(webRoot, oldCover.TrimStart('/'));
+                        var oldFilePath = ResolveUploadPath(oldCover);
                         if (System.IO.File.Exists(oldFilePath))
                         {
                             System.IO.File.Delete(oldFilePath);
@@ -127,13 +126,11 @@ namespace UselessLabb.Pages.Books
 
         private async Task<string> SaveCoverAsync(IFormFile file)
         {
-            var webRoot = _webHostEnvironment.WebRootPath;
-            if (string.IsNullOrWhiteSpace(webRoot))
-            {
-                webRoot = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
-            }
-
-            var uploadsFolder = Path.Combine(webRoot, "uploads", "covers");
+            var uploadsFolder = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "UselessLabb",
+                "uploads",
+                "covers");
             Directory.CreateDirectory(uploadsFolder);
 
             var uniqueFileName = $"{Guid.NewGuid():N}{Path.GetExtension(file.FileName).ToLowerInvariant()}";
@@ -143,6 +140,21 @@ namespace UselessLabb.Pages.Books
             await file.CopyToAsync(fileStream);
 
             return $"/uploads/covers/{uniqueFileName}";
+        }
+
+        private static string ResolveUploadPath(string publicPath)
+        {
+            var uploadsRoot = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "UselessLabb",
+                "uploads");
+
+            var relativePath = publicPath
+                .TrimStart('/')
+                .Replace("uploads/", string.Empty, StringComparison.OrdinalIgnoreCase)
+                .Replace('/', Path.DirectorySeparatorChar);
+
+            return Path.Combine(uploadsRoot, relativePath);
         }
 
         private bool BookExists(int id)

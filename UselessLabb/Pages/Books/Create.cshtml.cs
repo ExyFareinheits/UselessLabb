@@ -89,13 +89,11 @@ namespace UselessLabb.Pages.Books
 
         private async Task<string> SaveCoverAsync(IFormFile file)
         {
-            var webRoot = _webHostEnvironment.WebRootPath;
-            if (string.IsNullOrWhiteSpace(webRoot))
-            {
-                webRoot = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
-            }
-
-            var uploadsFolder = Path.Combine(webRoot, "uploads", "covers");
+            var uploadsFolder = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "UselessLabb",
+                "uploads",
+                "covers");
             Directory.CreateDirectory(uploadsFolder);
 
             var uniqueFileName = $"{Guid.NewGuid():N}{Path.GetExtension(file.FileName).ToLowerInvariant()}";
