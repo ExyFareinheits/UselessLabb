@@ -11,6 +11,9 @@ namespace UselessLabb.Pages.Books
     [Authorize]
     public class EditModel : PageModel
     {
+        private const long MaxCoverSizeBytes = 2 * 1024 * 1024;
+        private static readonly string[] AllowedCoverExtensions = [".jpg", ".jpeg", ".png", ".webp"];
+
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
@@ -49,37 +52,37 @@ namespace UselessLabb.Pages.Books
 
         public async Task<IActionResult> OnPostAsync()
         {
+            ValidateCoverFile();
+
             if (!ModelState.IsValid)
             {
                 await LoadSelectListsAsync();
                 return Page();
             }
 
-            // Handle file upload
             if (CoverImageFile != null)
             {
-                var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "covers");
-                Directory.CreateDirectory(uploadsFolder);
-
-                var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(CoverImageFile.FileName);
-                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                try
                 {
-                    await CoverImageFile.CopyToAsync(fileStream);
-                }
+                    var oldCover = Book.CoverImage;
+                    Book.CoverImage = await SaveCoverAsync(CoverImageFile);
 
-                // Delete old cover if exists
-                if (!string.IsNullOrEmpty(Book.CoverImage))
-                {
-                    var oldFilePath = Path.Combine(_webHostEnvironment.WebRootPath, Book.CoverImage.TrimStart('/'));
-                    if (System.IO.File.Exists(oldFilePath))
+                    if (!string.IsNullOrEmpty(oldCover))
                     {
-                        System.IO.File.Delete(oldFilePath);
+                        var webRoot = _webHostEnvironment.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                        var oldFilePath = Path.Combine(webRoot, oldCover.TrimStart('/'));
+                        if (System.IO.File.Exists(oldFilePath))
+                        {
+                            System.IO.File.Delete(oldFilePath);
+                        }
                     }
                 }
-
-                Book.CoverImage = "/uploads/covers/" + uniqueFileName;
+                catch
+                {
+                    ModelState.AddModelError("CoverImageFile", "Не вдалося зберегти обкладинку. Спробуйте інше зображення.");
+                    await LoadSelectListsAsync();
+                    return Page();
+                }
             }
 
             _context.Attach(Book).State = EntityState.Modified;
@@ -101,6 +104,45 @@ namespace UselessLabb.Pages.Books
             }
 
             return RedirectToPage("./Index");
+        }
+
+        private void ValidateCoverFile()
+        {
+            if (CoverImageFile == null)
+            {
+                return;
+            }
+
+            var extension = Path.GetExtension(CoverImageFile.FileName).ToLowerInvariant();
+            if (!AllowedCoverExtensions.Contains(extension))
+            {
+                ModelState.AddModelError("CoverImageFile", "Дозволені формати: JPG, JPEG, PNG, WEBP.");
+            }
+
+            if (CoverImageFile.Length == 0 || CoverImageFile.Length > MaxCoverSizeBytes)
+            {
+                ModelState.AddModelError("CoverImageFile", "Розмір файлу має бути від 1 байта до 2MB.");
+            }
+        }
+
+        private async Task<string> SaveCoverAsync(IFormFile file)
+        {
+            var webRoot = _webHostEnvironment.WebRootPath;
+            if (string.IsNullOrWhiteSpace(webRoot))
+            {
+                webRoot = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            }
+
+            var uploadsFolder = Path.Combine(webRoot, "uploads", "covers");
+            Directory.CreateDirectory(uploadsFolder);
+
+            var uniqueFileName = $"{Guid.NewGuid():N}{Path.GetExtension(file.FileName).ToLowerInvariant()}";
+            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+            await using var fileStream = new FileStream(filePath, FileMode.Create);
+            await file.CopyToAsync(fileStream);
+
+            return $"/uploads/covers/{uniqueFileName}";
         }
 
         private bool BookExists(int id)
