@@ -19,6 +19,41 @@ html {
 
 body {
   margin-bottom: 60px;
+  background: linear-gradient(135deg, #f8fbff 0%, #eef4ff 100%);
+}
+
+.glass-nav {
+  background: linear-gradient(90deg, #1f3c88 0%, #2c5aa0 100%);
+}
+
+.slogan-text {
+  color: #dce8ff;
+  font-size: 0.95rem;
+  margin-left: 1rem;
+}
+
+.hero-section {
+  background: linear-gradient(135deg, rgba(31, 60, 136, 0.08), rgba(44, 90, 160, 0.12));
+  border: 1px solid rgba(31, 60, 136, 0.15);
+  border-radius: 1rem;
+  padding: 2.5rem 1.25rem;
+}
+
+.hero-slogan {
+  color: #1f3c88;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.feature-card {
+  border-radius: 0.85rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0.75rem 1.5rem rgba(31, 60, 136, 0.15) !important;
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
