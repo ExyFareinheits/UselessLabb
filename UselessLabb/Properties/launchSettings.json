@@ -8,7 +8,9 @@
       "applicationUrl": "http://localhost:5257",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "DOTNET_WATCH_SUPPRESS_BROWSER_REFRESH": "1"
+        "DOTNET_WATCH_SUPPRESS_BROWSER_REFRESH": "1",
+        "ASPNETCORE_PREVENTHOSTINGSTARTUP": "true",
+        "__ASPNETCORE_BROWSER_TOOLS": "false"
       }
     },
     "https": {
@@ -18,7 +20,9 @@
       "applicationUrl": "https://localhost:7123;http://localhost:5257",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "DOTNET_WATCH_SUPPRESS_BROWSER_REFRESH": "1"
+        "DOTNET_WATCH_SUPPRESS_BROWSER_REFRESH": "1",
+        "ASPNETCORE_PREVENTHOSTINGSTARTUP": "true",
+        "__ASPNETCORE_BROWSER_TOOLS": "false"
       }
     }
   }

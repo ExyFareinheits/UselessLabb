@@ -16,12 +16,25 @@ namespace UselessLabb.Pages.Books
 
         public IList<Book> Books { get; set; } = new List<Book>();
 
+        [BindProperty(SupportsGet = true)]
+        public string? SearchString { get; set; }
+
         public async Task OnGetAsync()
         {
-            Books = await _context.Books
+            var booksQuery = _context.Books
                 .Include(b => b.Genre)
                 .Include(b => b.Publisher)
-                .ToListAsync();
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(SearchString))
+            {
+                var lowerSearch = SearchString.ToLower();
+                booksQuery = booksQuery.Where(b => 
+                    b.Title.ToLower().Contains(lowerSearch) || 
+                    b.Author.ToLower().Contains(lowerSearch));
+            }
+
+            Books = await booksQuery.ToListAsync();
         }
     }
 }
